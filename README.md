@@ -49,3 +49,43 @@ flask-sqlacodegen 'mysql://root:123456@127.0.0.1/hmsc_db' --tables member --outf
 
 
 insert into `member` (`id`,`nickname`,`mobile`,`sex`,`avatar`,`salt`,`reg_ip`,`status`,`updated_time`,`created_time`) values (1,'BruceNick','13933746521',1,'','cF3JfH5FJfQ8B2Ba','20200429',1,'2020-04-29 11:30:30','2020-04-29 11:10:30');
+
+
+
+
+#### 二、会员评论 数据库
+
+1. 会员评论 数据库
+
+   ```mysql
+   use hmsc_db;
+   
+   drop table if exists `member_comments`;
+   create table `member_comments`(
+   	`id` int(11) unsigned not null auto_increment,
+   	`member_id` int(11) not null default '0' comment '会员id',
+   	`goods_id` varchar(200) not null default '' comment '商品id',
+   	`pay_order_id` int(11) not null default '0' comment '订单id',
+   	`score` tinyint(4) not null default '0' comment '评分',
+   	`content` varchar(200) not null default '' comment '评论内容',
+   	`created_time` timestamp not null default current_timestamp on update current_timestamp comment '创建时间',
+   	primary key (`id`),
+   	key `idx_member_id` (`member_id`)
+   )ENGINE=InnoDB default charset=utf8 comment='会员评论表';
+   ```
+
+   
+
+2. 生成model
+
+   ```
+   flask-sqlacodegen 'mysql://root:123456@127.0.0.1/hmsc_db' --tables member_comments --outfile "common/models/member/MemberComment.py" --flask
+   ```
+
+3. 插入数据
+
+   ```
+   insert into `member_comments` (`id`,`member_id`,`goods_id`,`pay_order_id`,`score`,`content`,`status`,`created_time`) values (1,'1','1','1','10','好，good','2020-04-29 11:10:30');
+   ```
+
+   
