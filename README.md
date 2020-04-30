@@ -50,7 +50,41 @@ flask-sqlacodegen 'mysql://root:123456@127.0.0.1/hmsc_db' --tables member --outf
 
 insert into `member` (`id`,`nickname`,`mobile`,`sex`,`avatar`,`salt`,`reg_ip`,`status`,`updated_time`,`created_time`) values (1,'BruceNick','13933746521',1,'','cF3JfH5FJfQ8B2Ba','20200429',1,'2020-04-29 11:30:30','2020-04-29 11:10:30');
 
+1. goods数据库
 
+   ```mysql
+   use hmsc_db;
+   
+   drop table if exists `goods`;
+   create table `goods` (
+       `id` int(11) unsigned not null auto_increment,
+       `cat_id` int(11) not null default '0' comment '分类id',
+       `name` varchar(100) not null default '' comment '商品名称',
+       `price` decimal(10,2) not null default '0.00' comment '商品价格',
+       `main_image` varchar(100) not null default '' comment '商品主图',
+       `summary` varchar(10000) not null default '' comment '商品描述',
+       `stock` int(11) not null default '0' comment '库存数',
+       `tags` varchar(200) not null default '' comment 'tag 标签，用“,”连接',
+       `status` tinyint(1) not null default '1' comment '1:有效，0：无效',
+       `month_count` int(11) not null default '0' comment '月销量',
+       `total_count` int(11) not null default '0' comment '总销量',
+       `view_count` int(11) not null default '0' comment '总浏览次数',
+       `comment_count` int(11) not null default '0' comment '总评论数',
+       `updated_time` timestamp not null default current_timestamp comment '最后一次更新时间',
+   	`created_time` timestamp not null default current_timestamp comment '创建时间',
+   	primary key (`id`)
+   )ENGINE=InnoDB default charset=utf8 comment='商品表';
+   ```
+
+   
+
+2. 生成models
+
+   ```
+   flask-sqlacodegen 'mysql://root:123456@127.0.0.1/hmsc_db' --tables goods --outfile "common/models/goods/Goods.py" --flask
+   ```
+
+   
 
 
 #### 二、会员评论 数据库
